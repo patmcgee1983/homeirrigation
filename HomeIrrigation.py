@@ -7,6 +7,20 @@ from datetime import *
 from time import *
 from threading import *
 
+global gpio
+import RPi.GPIO as gpio
+
+
+gpio.setmode(gpio.BOARD)
+
+
+gpio.setup(11, gpio.OUT)
+gpio.setup(12, gpio.OUT)
+gpio.setup(13, gpio.OUT)
+gpio.setup(15, gpio.OUT)
+gpio.setup(16, gpio.OUT)
+
+
 
 
 class App(object):
@@ -104,23 +118,26 @@ class Zone(App):
         self.drawZone()
         self.switchOff()
 
-        if self.id == 1:
+        # Setting up the GPIO Pins
+        if self.id == 0:
             self.setGpio(11)
-        if self.id == 2:
+        if self.id == 1:
             self.setGpio(12)
-        if self.id == 3:
+        if self.id == 2:
             self.setGpio(13)
-        if self.id == 4:
+        if self.id == 3:
             self.setGpio(15)
-        if self.id == 5:
+        if self.id == 4:
             self.setGpio(16)
-        if self.id == 6:
-            self.setGpio(17)
+        if self.id == 5:
+            self.setGpio(18)
         
         return None
 
-    def setGpio(self, gpio):
-        self.gpio = gpio
+    
+    def setGpio(self, gpioPin):
+        self.gpio = gpioPin
+        
         print("Zone " + str(self.id) + " GPIO pin is set to " + str(self.gpio))
         return self.gpio
     
@@ -217,13 +234,18 @@ class Zone(App):
         
     def switchOn(self):
         self.on = True
-        print('Switch ' + str(self.id) + ' is now ON')
+        print('Switch ' + str(self.id) + ' is now ON on GPIO ' + str(self.gpio))
+        gpio.output(self.gpio, gpio.HIGH)
+        
         self.buttonOn.configure(bg = "Lime Green")
+        
         self.buttonOff.configure(bg = "Light Grey")
 
     def switchOff(self):
         self.on = False
-        print('Switch ' + str(self.id) + ' is now OFF')
+        print('Switch ' + str(self.id) + ' is now OFF on GPIO' + str(self.gpio))
+        gpio.output(11, gpio.LOW)
+        
         self.buttonOff.configure(bg = "red")
         self.buttonOn.configure(bg = "Light Grey")
 
