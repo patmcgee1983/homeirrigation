@@ -41,7 +41,7 @@ class App(object):
     def clearAll(self):
         for x in range(0,len(super.zoneList)):
             zoneList[x].clearZone()
-
+    
             
     def check(self):
 
@@ -78,8 +78,7 @@ class App(object):
         clock.after(200, self.check)
 
 
-        
-
+                
 # Each zone contains buttons, methods, and properties relating to controlling each irrigation zone
 class Zone(App):
     
@@ -87,6 +86,7 @@ class Zone(App):
         
         self.on = bool
         self.id = int
+        self.gpio = int
         self.auto = bool
         
         self.startTime = time()
@@ -103,10 +103,27 @@ class Zone(App):
 
         self.drawZone()
         self.switchOff()
-        
+
+        if self.id == 1:
+            self.setGpio(11)
+        if self.id == 2:
+            self.setGpio(12)
+        if self.id == 3:
+            self.setGpio(13)
+        if self.id == 4:
+            self.setGpio(15)
+        if self.id == 5:
+            self.setGpio(16)
+        if self.id == 6:
+            self.setGpio(17)
         
         return None
 
+    def setGpio(self, gpio):
+        self.gpio = gpio
+        print("Zone " + str(self.id) + " GPIO pin is set to " + str(self.gpio))
+        return self.gpio
+    
     def drawZone(self):
         
         frame = Frame(root)
